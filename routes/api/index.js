@@ -1,8 +1,13 @@
 const router = require('express').Router();
-const commentRoutes = require('./comment-routes');
-const pizzaRoutes = require('./pizza-routes');
+const thoughtRoutes = require('./thought-routes');
+const userRoutes = require('./user-routes');
 
-router.use('/comments', commentRoutes);
-router.use('/pizzas', pizzaRoutes);
+router.use('/thoughts', thoughtRoutes);
+router.use('/users', userRoutes);
+
+
+router.use((req, res) => {
+    res.status(404).send('<h1>😝 404 Error! Better Luck next time!</h1>');
+});
 
 module.exports = router;
