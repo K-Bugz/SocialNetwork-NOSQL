@@ -4,18 +4,18 @@ const {
     removeThought,
     addReaction,
     removeReaction
-} = require('../../controllers/comment-controller');
+} = require('../../controllers/thought-controller.js');
 
-// /api/thoughts/<userId>
-router.route('/:pizzaId').post(addThought);
+// /api/thoughts/>
+router.route('/').post(addThought);
 
-// /api/thoughts/<userId>/<thoughtId>
+// /api/thoughts/<thoughtId>
 router
-    .route('/:userId/:thoughtId')
-    .put(addReaction)
+    .route('/:thoughtId/reactions')
+    .post(addReaction)
     .delete(removeThought);
 
-// /api/comments/<userId>/<thoughtId>/<reactionId>
+// /api/thoughts/<userId>/<thoughtId>/<reactionId>
 router.route('/:userId/:thoughtId/:reactionId').delete(removeReaction);
 
 module.exports = router;

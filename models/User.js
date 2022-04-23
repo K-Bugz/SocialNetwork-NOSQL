@@ -4,7 +4,7 @@ const UserSchema = new Schema(
     {
         userName: {
             type: String,
-            unique: true, // `userName` must be unique
+            unique: true,
             required: true,
             trim: true
         },
@@ -23,14 +23,13 @@ const UserSchema = new Schema(
         friends: [
             {
                 type: Schema.Types.ObjectId,
-                // ref: 'Comment' // How do I self reference? 
+                ref: 'User' // The model is referencing itself... b/c a friend is a different User
             }
         ]
     },
     {
         toJSON: {
-            virtuals: true,
-            getters: true
+            virtuals: true
         },
         // prevents virtuals from creating duplicate of _id as `id`
         id: false
@@ -39,10 +38,11 @@ const UserSchema = new Schema(
 
 // get total count of friends and replies on retrieval
 UserSchema.virtual('friendCount').get(function () {
-    return this.friends.reduce(
-        (total, friend) => total + friend.replies.length + 1,
-        0
-    );
+    // return this.friends.reduce(
+    //     (total, friend) => total + friend.replies.length + 1,
+    //     0
+    // );
+    return this.friends.length;
 });
 
 const User = model('User', UserSchema);

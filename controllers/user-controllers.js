@@ -4,12 +4,16 @@ const userController = {
     // get all users
     getAllUsers(req, res) {
         User.find({})
-            .populate({ //  Ask if this is correrct
-                path: 'thought',
+            .populate({ //  Ask if this is correrct and maybe more clarification on some of the terminology
+                path: 'thoughts',
                 select: '-__v'
             })
             .select('-__v')
             .sort({ _id: -1 })
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            })
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -17,14 +21,17 @@ const userController = {
             });
     },
 
-    // get one pizza by id
+    // get one user by id
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
-            .populate({ // Same as get ALL most likely
-                path: 'thought',
+            .populate({
+                path: 'thoughts',
                 select: '-__v'
             })
-            .select('-__v')
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            })
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -57,7 +64,41 @@ const userController = {
         User.findOneAndDelete({ _id: params.id })
             .then(dbUserData => res.json(dbUserData))
             .catch(err => res.json(err));
+    },
+
+
+    // Make new POST method called addFriend   *use mongoose's push method (look at class work)
+    newFriend({ params }, res) {
+        User.findByIdAndUpdate(
+            { _id: params.userId },
+            { $addToSet: { friends: params.friendId } },
+            { new: true, runValidators: true })
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({ message: 'No user found with this id!' });
+                    return;
+                }
+                res.json(dbUserData);
+            })
+            .catch(err => res.json(err))
+    },
+    // Make new DELETE method called deleteFriend    *use mongoose's pull method (look at class work)
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true }
+        )
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({ message: 'No friend and/or User with this id!' });
+                    return;
+                }
+                res.json(dbUserData);
+            })
+            .catch(err => res.json(err))
     }
 };
+
 
 module.exports = userController;

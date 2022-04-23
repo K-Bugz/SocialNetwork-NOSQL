@@ -1,13 +1,13 @@
 const { Thought, User } = require('../models');
 
 const thoughtController = {
-    // add thoguht to a user
-    addThought({ params, body }, res) {
+    // add thought to a user
+    addThought({ body }, res) {
         console.log(body);
-        Thought.create(body)
+        Thought.create({ "thoughtText": body.thoughtText, "username": body.username })
             .then(({ _id }) => {
                 return User.findOneAndUpdate(
-                    { _id: params.userId },
+                    { _id: body.userId },
                     { $push: { thoughts: _id } },
                     { new: true }
                 );
@@ -22,10 +22,10 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
 
-    // add reply to comment (Did I make this sub-document model correctly)
+    // add reaction to thought (Did I make this sub-document model correctly)
     addReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
-            { _id: params.commentId },
+            { _id: params.thoughtId },
             { $push: { reactions: body } },
             { new: true, runValidators: true }
         )
@@ -39,12 +39,12 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
 
-    // remove comment
-    removeComment({ params }, res) {
-        Thought.findOneAndDelete({ _id: params.commentId })
-            .then(deletedComment => {
-                if (!deletedComment) {
-                    return res.status(404).json({ message: 'No comment with this id!' });
+    // remove thought
+    removeThought({ params }, res) {
+        Thought.findOneAndDelete({ _id: params.thoughtId })
+            .then(deletedThought => {
+                if (!deletedThought) {
+                    return res.status(404).json({ message: 'No thought with this id!' });
                 }
                 return User.findOneAndUpdate(
                     { _id: params.userId },
@@ -62,7 +62,7 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
     // remove reaction
-    removeReply({ params }, res) {
+    removeReaction({ params }, res) {
         Thought.findOneAndUpdate(
             { _id: params.commentId },
             { $pull: { reactions: { reactionId: params.reactionId } } },
