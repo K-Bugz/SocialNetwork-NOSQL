@@ -25,7 +25,7 @@ Not up yet, due to the front-en needing development
  Below is the gif showing the functionality of the application: <br>
 ![SocialNetwork-NOSQL](/public/images/Readme.gif)
 ## Task
-The task at hand was to demonstarate my ability to apply NOSQL, and MVC method of design structure. I chose a social media site that allowed users to post and comment topics. 
+The task at hand was to demonstarate my ability to apply NOSQL, and MVC method of design structure. 
 
 
 ## Usage
