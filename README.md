@@ -23,7 +23,7 @@ Not up yet, due to the front-en needing development
 <br>
 
  Below is the gif showing the functionality of the application: <br>
-![SocialNetwork-NOSQL](/public/images/Readme.gif)
+![SocialNetwork-NOSQL](/SocialNetwork-NOSQL.gif)
 ## Task
 The task at hand was to demonstarate my ability to apply NOSQL, and MVC method of design structure. 
 
